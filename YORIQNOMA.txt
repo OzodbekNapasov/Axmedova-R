@@ -1,0 +1,22 @@
+"Oftalmologiyada hamshiralik ishi" moduli - Raqamli ta'lim resursi (RTR)
+Muallif: Axmedova Roxila, Shahrisabz Abu Ali ibn Sino nomidagi jamoat salomatligi texnikumi
+
+KOMPYUTERDA ISHGA TUSHIRISH
+1. Butun "RTR_Oftalmologiya" papkasini fleshka yoki kompyuterga ko'chiring.
+2. "index.html" faylini Google Chrome, Microsoft Edge yoki Firefox brauzerida oching.
+3. Internet talab qilinmaydi.
+
+TELEFONDA ISHGA TUSHIRISH (Android)
+1. ZIP faylni telefonga yuklab oling va fayl menejerida arxivdan chiqaring.
+2. Papkadagi "index.html" faylini Chrome brauzerida oching.
+Eslatma: ZIP ichidan turib ochmang, avval arxivdan chiqaring.
+
+TARKIBI
+index.html                  - bosh sahifa (dasturiy qobiq)
+assets/                     - dastur fayllari va mavzular ma'lumotlari
+mavzular/n1 ... n8          - nazariy mashg'ulotlar
+mavzular/a1 ... a7          - amaliy mashg'ulotlar
+  hujjatlar/                - ma'ruza, metodlar, nazorat, glossariy (Word + PDF), taqdimot (PowerPoint + PDF)
+  media/                    - video.mp4 (720p) va audio.mp3
+  didaktik/                 - plakat, sxema va rasmlar
+  slaydlar/                 - taqdimot slaydlari
