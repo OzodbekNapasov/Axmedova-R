@@ -138,9 +138,8 @@
   var P = {};
   P.home = function () {
     var last = get("rtr-last"), lt = last && topic(last.split("/")[0]);
-    var h = '<div class="hero"><div class="hero-txt"><h1>' + esc(M.title) + "</h1><p>Köz kasalliklarida bemorni parvariş qilişni örganiş uçun raqamli darslik</p>" +
-      '<div class="btns">' + (lt ? '<a class="btn light" href="#t/' + last + '">Davom ettiriş' + ic("right") + "</a>" : '<a class="btn light" href="#t/' + D.topics[0].slug + '/about">Boşlaş' + ic("right") + "</a>") + "</div></div>" +
-      '<img src="' + esc(D.hero) + '" alt="Köz tuzilişi"></div>';
+    var h = '<div class="hero photo"><div class="hero-txt"><h1>' + esc(M.title) + "</h1><p>Köz kasalliklarida bemorni parvariş qilişni örganiş uçun raqamli darslik</p>" +
+      '<div class="btns">' + (lt ? '<a class="btn light" href="#t/' + last + '">Davom ettiriş' + ic("right") + "</a>" : '<a class="btn light" href="#t/' + D.topics[0].slug + '/about">Boşlaş' + ic("right") + "</a>") + "</div></div></div>";
     h += '<div class="how"><div>' + ic("list") + "<b>Mavzuni tanlang</b></div><div>" + ic("play") + "<b>Öqing va köring</b></div><div>" + ic("check") + "<b>Testni yeçing</b></div></div>";
     return h + '<h2 id="topics">Mavzular</h2>' + topicRows() + foot();
   };
