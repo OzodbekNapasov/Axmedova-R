@@ -112,7 +112,7 @@
   }
   function glList(list, q) {
     // klaviaturada yozilgan o' g' sh ch ham ö ğ ş ç deb qidiriladi
-    function nq(x) { return x.toLowerCase().replace(/['`´‘’ʻʼ]/g, "'").replace(/o'/g, "ö").replace(/g'/g, "ğ").replace(/sh/g, "ş").replace(/ch/g, "ç"); }
+    function nq(x) { return x.toLowerCase().replace(/['`´‘’ʻʼ]/g, "'").replace(/o'/g, "ö").replace(/g'/g, "ğ").replace(/sh/g, "ş").replace(/ch/g, "ç").replace(/'(?=y)/g, ""); }
     q = nq(q); var last = "", h = "";
     list.forEach(function (g) {
       if (q && nq(g.t + " " + g.l + " " + g.d).indexOf(q) < 0) return;
