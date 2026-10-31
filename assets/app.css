@@ -302,3 +302,10 @@ fieldset.q{border:1px solid var(--line);min-width:0}
   .tabs a{padding:0 12px}
   .switch button{font-size:.84rem}
 }
+/* bosh sahifa: foto fonli qisqa karta */
+.hero.photo{position:relative;overflow:hidden;background:#06222c url(hero.jpg?v=1) 70% 35%/cover no-repeat}
+.hero.photo::before{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(6,34,44,.94) 0%,rgba(6,34,44,.8) 45%,rgba(6,34,44,.35) 100%)}
+.hero.photo>*{position:relative;z-index:1}
+.hero.photo p{max-width:34em;text-shadow:0 1px 3px rgba(0,0,0,.5)}
+.hero.photo h1{text-shadow:0 2px 6px rgba(0,0,0,.45)}
+@media(max-width:700px){.hero.photo{background-position:62% 40%}.hero.photo::before{background:linear-gradient(180deg,rgba(6,34,44,.74) 0%,rgba(6,34,44,.42) 55%,rgba(6,34,44,.62) 100%)}}
