@@ -3,7 +3,7 @@
   var D = window.RTR, M = D.module, cache = window.RTR_T = window.RTR_T || {};
   var app = document.getElementById("app"), sb = document.getElementById("sidebar"), bd = document.getElementById("backdrop");
   var TABS = [["about", "Reja", "list"], ["lecture", "Maʼruza", "book"], ["methods", "Metodlar", "people"], ["media", "Video", "play"],
-              ["didactic", "Rasmlar", "image"], ["slides", "Slaydlar", "slides"], ["control", "Test", "check"], ["glossary", "Lugʻat", "abc"]];
+              ["didactic", "Rasmlar", "image"], ["slides", "Slaydlar", "slides"], ["control", "Test", "check"], ["glossary", "Luğat", "abc"]];
 
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function $(id) { return document.getElementById(id); }
@@ -22,7 +22,7 @@
   function applyTheme(t) {
     document.documentElement.setAttribute("data-theme", t); put("rtr-theme", t);
     $("themeUse").setAttribute("href", t === "dark" ? "#i-sun" : "#i-moon");
-    $("themeBtn").setAttribute("aria-label", t === "dark" ? "Yorugʻ rejim" : "Tungi rejim");
+    $("themeBtn").setAttribute("aria-label", t === "dark" ? "Yoruğ rejim" : "Tungi rejim");
   }
   applyFs();
   applyTheme(get("rtr-theme") || (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
@@ -84,11 +84,11 @@
   // ---------- yon menyu
   function cur(c) { return c ? ' class="active" aria-current="page"' : ""; }
   function renderNav(slug, r) {
-    var h = '<a href="#home"' + cur(r === "home") + ">" + ic("home") + '<span class="tt">Bosh sahifa</span></a><div class="nav-group">Mavzular</div>';
+    var h = '<a href="#home"' + cur(r === "home") + ">" + ic("home") + '<span class="tt">Boş sahifa</span></a><div class="nav-group">Mavzular</div>';
     D.topics.forEach(function (t, i) {
       h += '<a href="#t/' + t.slug + '/about"' + cur(t.slug === slug) + ' title="' + esc(t.title) + '"><span class="num">' + (i + 1) + '</span><span class="tt">' + esc(t.short) + "</span></a>";
     });
-    h += '<div class="nav-group">Qoʻshimcha</div><a href="#glossary"' + cur(r === "glossary") + ">" + ic("abc") + '<span class="tt">Lugʻat</span></a><a href="#literature"' + cur(r === "literature") + ">" + ic("shelf") + '<span class="tt">Adabiyotlar</span></a><a href="#author"' + cur(r === "author") + ">" + ic("user") + '<span class="tt">Muallif haqida</span></a>';
+    h += '<div class="nav-group">Qöşimça</div><a href="#glossary"' + cur(r === "glossary") + ">" + ic("abc") + '<span class="tt">Luğat</span></a><a href="#literature"' + cur(r === "literature") + ">" + ic("shelf") + '<span class="tt">Adabiyotlar</span></a><a href="#author"' + cur(r === "author") + ">" + ic("user") + '<span class="tt">Muallif haqida</span></a>';
     sb.innerHTML = h;
   }
 
@@ -108,23 +108,23 @@
   }
   function dl(s, file) {
     var p = base(s) + "hujjatlar/" + file;
-    return '<div class="dl-row"><span>Yuklab olish:</span><a href="' + p + '.docx" download>' + ic("file") + 'Word</a><a href="' + p + '.pdf" target="_blank" rel="noopener">' + ic("file") + "PDF</a></div>";
+    return '<div class="dl-row"><span>Yuklab oliş:</span><a href="' + p + '.docx" download>' + ic("file") + 'Word</a><a href="' + p + '.pdf" target="_blank" rel="noopener">' + ic("file") + "PDF</a></div>";
   }
   function glList(list, q) {
-    // klaviaturadagi ' ` ‘ ’ belgilari ham ʻ / ʼ deb qidiriladi
-    function nq(x) { return x.toLowerCase().replace(/['`´‘’ʻʼ]/g, "ʻ"); }
+    // klaviaturada yozilgan o' g' sh ch ham ö ğ ş ç deb qidiriladi
+    function nq(x) { return x.toLowerCase().replace(/['`´‘’ʻʼ]/g, "'").replace(/o'/g, "ö").replace(/g'/g, "ğ").replace(/sh/g, "ş").replace(/ch/g, "ç"); }
     q = nq(q); var last = "", h = "";
     list.forEach(function (g) {
       if (q && nq(g.t + " " + g.l + " " + g.d).indexOf(q) < 0) return;
-      var m = /^(Oʻ|Gʻ|Sh|Ch)/.exec(g.t), L = m ? m[1] : g.t.charAt(0);
+      var L = g.t.charAt(0);
       if (L !== last && !q) { h += '<div class="letter">' + esc(L) + "</div>"; last = L; }
       h += '<div class="gl-item"><b>' + esc(g.t) + "</b><br>" + esc(g.d) + "</div>";
     });
-    return h || "<p>Hech narsa topilmadi.</p>";
+    return h || "<p>Heç narsa topilmadi.</p>";
   }
   function glBlock(list) {
     setTimeout(function () { var q = $("glq"); if (q) q.oninput = function () { $("gll").innerHTML = glList(list, q.value); }; }, 0);
-    return '<input class="search" id="glq" type="search" autocomplete="off" aria-label="Soʻz qidirish" placeholder="Soʻz qidirish"><div id="gll">' + glList(list, "") + "</div>";
+    return '<input class="search" id="glq" type="search" autocomplete="off" aria-label="Söz qidiriş" placeholder="Söz qidiriş"><div id="gll">' + glList(list, "") + "</div>";
   }
   function topicRows() {
     var best = getJ("rtr-best", {});
@@ -138,14 +138,14 @@
   var P = {};
   P.home = function () {
     var last = get("rtr-last"), lt = last && topic(last.split("/")[0]);
-    var h = '<div class="hero"><div class="hero-txt"><h1>' + esc(M.title) + "</h1><p>Koʻz kasalliklarida bemorni parvarish qilishni oʻrganish uchun raqamli darslik</p>" +
-      '<div class="btns">' + (lt ? '<a class="btn light" href="#t/' + last + '">Davom ettirish' + ic("right") + "</a>" : '<a class="btn light" href="#t/' + D.topics[0].slug + '/about">Boshlash' + ic("right") + "</a>") + "</div></div>" +
-      '<img src="' + esc(D.hero) + '" alt="Koʻz tuzilishi"></div>';
-    h += '<div class="how"><div>' + ic("list") + "<b>Mavzuni tanlang</b></div><div>" + ic("play") + "<b>Oʻqing va koʻring</b></div><div>" + ic("check") + "<b>Testni yeching</b></div></div>";
+    var h = '<div class="hero"><div class="hero-txt"><h1>' + esc(M.title) + "</h1><p>Köz kasalliklarida bemorni parvariş qilişni örganiş uçun raqamli darslik</p>" +
+      '<div class="btns">' + (lt ? '<a class="btn light" href="#t/' + last + '">Davom ettiriş' + ic("right") + "</a>" : '<a class="btn light" href="#t/' + D.topics[0].slug + '/about">Boşlaş' + ic("right") + "</a>") + "</div></div>" +
+      '<img src="' + esc(D.hero) + '" alt="Köz tuzilişi"></div>';
+    h += '<div class="how"><div>' + ic("list") + "<b>Mavzuni tanlang</b></div><div>" + ic("play") + "<b>Öqing va köring</b></div><div>" + ic("check") + "<b>Testni yeçing</b></div></div>";
     return h + '<h2 id="topics">Mavzular</h2>' + topicRows() + foot();
   };
   P.topics = P.home;
-  P.glossary = function () { return "<h1>Lugʻat</h1><div class=\"card\">" + glBlock(D.glossary) + "</div>" + foot(); };
+  P.glossary = function () { return "<h1>Luğat</h1><div class=\"card\">" + glBlock(D.glossary) + "</div>" + foot(); };
   P.literature = function () { return '<h1>Adabiyotlar</h1><div class="card"><ol>' + D.literature.map(function (l) { return "<li>" + esc(l) + "</li>"; }).join("") + "</ol></div>" + foot(); };
   P.author = function () {
     return '<h1>Muallif haqida</h1><div class="card"><div class="kv"><div>Muallif</div><div><b>' + esc(M.author) + "</b>, " + esc(M.author_role) + "</div><div>Taʼlim muassasasi</div><div>" + esc(M.org) +
@@ -156,10 +156,10 @@
   // ---------- mavzu sahifalari
   var V = {};
   V.about = function (s, T) {
-    var h = '<div class="card"><h2>Bu darsda nimani oʻrganasiz</h2><ul class="ticks">' + T.outcomes.map(function (o) { return "<li>" + ic("check") + "<span>" + esc(o) + "</span></li>"; }).join("") + "</ul></div>";
+    var h = '<div class="card"><h2>Bu darsda nimani örganasiz</h2><ul class="ticks">' + T.outcomes.map(function (o) { return "<li>" + ic("check") + "<span>" + esc(o) + "</span></li>"; }).join("") + "</ul></div>";
     h += '<div class="card"><h2>Reja</h2><ol>' + T.plan.map(function (p, i) { return '<li><a href="#t/' + s + '/lecture" data-sec="lec-' + (i + 1) + '">' + esc(p) + "</a></li>"; }).join("") + "</ol></div>";
-    h += "<details><summary>Oʻqituvchi uchun: dars tuzilishi</summary><p>" + esc(T.goal) + '</p><div class="tbl"><table><thead><tr><th>Bosqich</th><th>Vaqt</th><th>Usul</th></tr></thead><tbody>' +
-      T.structure.map(function (r) { return "<tr><td>" + esc(r[0]) + "</td><td>" + esc(r[1]) + "</td><td>" + esc(r[2]) + "</td></tr>"; }).join("") + "</tbody></table></div><p><b>Tayanch soʻzlar:</b> " + T.keywords.map(esc).join(", ") + "</p></details>";
+    h += "<details><summary>Öqituvçi uçun: dars tuzilişi</summary><p>" + esc(T.goal) + '</p><div class="tbl"><table><thead><tr><th>Bosqiç</th><th>Vaqt</th><th>Usul</th></tr></thead><tbody>' +
+      T.structure.map(function (r) { return "<tr><td>" + esc(r[0]) + "</td><td>" + esc(r[1]) + "</td><td>" + esc(r[2]) + "</td></tr>"; }).join("") + "</tbody></table></div><p><b>Tayanç sözlar:</b> " + T.keywords.map(esc).join(", ") + "</p></details>";
     return h;
   };
   V.lecture = function (s, T) {
@@ -168,28 +168,28 @@
     return h + '<div class="card lecture">' + T.lecture + "<h2>Adabiyotlar</h2><ol>" + T.literature.map(function (l) { return "<li>" + esc(l) + "</li>"; }).join("") + "</ol></div>";
   };
   V.methods = function (s, T) {
-    var h = "<p>Darsda ishlatiladigan usullar. Birini bosing, u ochiladi.</p>";
+    var h = "<p>Darsda işlatiladigan usullar. Birini bosing, u oçiladi.</p>";
     T.methods.forEach(function (m, i) {
-      h += "<details" + (i ? "" : " open") + "><summary>" + esc(m.name) + '</summary><p class="crumb">' + esc(m.stage) + "</p><p>" + esc(m.goal) + "</p><p><b>Qanday oʻtkaziladi</b></p><ol>" +
-        m.steps.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ol><p><b>Shu mavzuda</b></p><ul>" + m.task.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul></details>";
+      h += "<details" + (i ? "" : " open") + "><summary>" + esc(m.name) + '</summary><p class="crumb">' + esc(m.stage) + "</p><p>" + esc(m.goal) + "</p><p><b>Qanday ötkaziladi</b></p><ol>" +
+        m.steps.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ol><p><b>Şu mavzuda</b></p><ul>" + m.task.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul></details>";
     });
     return h + dl(s, "02_Oqitish_metodlari");
   };
   V.media = function (s, T) {
     var h = '<div class="card"><h2>' + ic("play") + "Video dars</h2>" + '<video controls playsinline preload="none" poster="' + base(s) + 'slaydlar/slayd_01.jpg" src="' + base(s) + 'media/video.mp4"></video></div>';
-    h += '<div class="card"><h2>' + ic("audio") + 'Tinglash</h2><audio controls preload="none" src="' + base(s) + 'media/audio.mp3"></audio></div>';
+    h += '<div class="card"><h2>' + ic("audio") + 'Tinglaş</h2><audio controls preload="none" src="' + base(s) + 'media/audio.mp3"></audio></div>';
     (T.interactive || []).forEach(function (k) { if (W[k]) h += W[k].html(s, T); });
     if (T.algorithms && T.algorithms.length) {
-      h += '<div class="card"><h2>' + ic("steps") + 'Muolajani qadamma-qadam oʻrganing</h2><div class="chip-row" id="algTabs">' +
+      h += '<div class="card"><h2>' + ic("steps") + 'Muolajani qadamma-qadam örganing</h2><div class="chip-row" id="algTabs">' +
         T.algorithms.map(function (a, i) { return '<button class="chip' + (i ? "" : " on") + '" data-i="' + i + '">' + esc(a.title) + "</button>"; }).join("") + '</div><div class="stepper" id="stepper"></div></div>';
     }
     return h;
   };
   V.didactic = function (s, T) {
-    var h = '<p>Rasmni bosing, u kattalashadi.</p><div class="gallery">';
+    var h = '<p>Rasmni bosing, u kattalaşadi.</p><div class="gallery">';
     T.gallery.forEach(function (g) {
       var p = base(s) + "didaktik/" + g.f;
-      h += '<figure><img src="' + p + '" alt="' + esc(g.t) + '" loading="lazy" data-zoom><figcaption><b>' + esc(g.t) + '</b><a class="dl" href="' + p + '" download aria-label="Yuklab olish: ' + esc(g.t) + '">' + ic("down") + "</a></figcaption></figure>";
+      h += '<figure><img src="' + p + '" alt="' + esc(g.t) + '" loading="lazy" data-zoom><figcaption><b>' + esc(g.t) + '</b><a class="dl" href="' + p + '" download aria-label="Yuklab oliş: ' + esc(g.t) + '">' + ic("down") + "</a></figcaption></figure>";
     });
     h += "</div>";
     (T.handouts || []).forEach(function (t) {
@@ -204,7 +204,7 @@
     var h = '<div class="slideview" id="sv"><img id="slideImg" alt="Slayd" data-zoom></div><div class="slidebar"><button class="btn ghost" id="sPrev" aria-label="Oldingi slayd">' + ic("left") + '</button><b id="sNum" aria-live="polite"></b><button class="btn" id="sNext" aria-label="Keyingi slayd">' + ic("right") + "</button></div>";
     h += '<details><summary>Izoh</summary><p id="sNote"></p></details>';
     var p = base(s) + "hujjatlar/06_Taqdimot";
-    return h + '<div class="dl-row"><span>Yuklab olish:</span><a href="' + p + '.pptx" download>' + ic("slides") + 'PowerPoint</a><a href="' + p + '.pdf" target="_blank" rel="noopener">' + ic("file") + "PDF</a></div>";
+    return h + '<div class="dl-row"><span>Yuklab oliş:</span><a href="' + p + '.pptx" download>' + ic("slides") + 'PowerPoint</a><a href="' + p + '.pdf" target="_blank" rel="noopener">' + ic("file") + "PDF</a></div>";
   };
   V.glossary = function (s, T) { return '<div class="card">' + glBlock(T.glossary) + "</div>"; };
 
@@ -214,26 +214,26 @@
   V.control = function (s, T) {
     var S = ts(s), part = S.part;
     function sw(k, n) { return '<button data-part="' + k + '"' + (part === k ? ' class="on"' : "") + ">" + n + "</button>"; }
-    var h = '<div class="switch" id="ctlSw">' + sw("test", "Test") + sw("review", "Savollar") + sw("tasks", "Masalalar") + sw("match", "Juftlash") + "</div>";
+    var h = '<div class="switch" id="ctlSw">' + sw("test", "Test") + sw("review", "Savollar") + sw("tasks", "Masalalar") + sw("match", "Juftlaş") + "</div>";
     h += '<section data-p="test"' + (part === "test" ? "" : " hidden") + '><form id="testForm" novalidate>';
     shuffle(T.tests.map(function (_, i) { return i; }), S.seed).forEach(function (qi, n) {
       var q = T.tests[qi];
       h += '<fieldset class="q" data-q="' + qi + '" data-a="' + q.a + '"><div class="qt">' + (n + 1) + ". " + esc(q.q) + "</div>" +
         shuffle([0, 1, 2, 3], S.seed + qi * 7).map(function (oi) { return '<label><input type="radio" name="q' + qi + '" value="' + oi + '"' + (S.ans[qi] === oi ? " checked" : "") + "><span>" + esc(q.o[oi]) + "</span></label>"; }).join("") + "</fieldset>";
     });
-    h += '<div id="testRes" aria-live="polite"></div><div class="testbar"><div class="cnt"><span id="tCnt"></span><div class="meter"><i id="tMeter" style="width:0"></i></div></div><button type="submit" class="btn" id="tSubmit">Tekshirish</button><button type="button" class="btn ghost" id="tReset" hidden>Qayta yechish</button></div></form></section>';
+    h += '<div id="testRes" aria-live="polite"></div><div class="testbar"><div class="cnt"><span id="tCnt"></span><div class="meter"><i id="tMeter" style="width:0"></i></div></div><button type="submit" class="btn" id="tSubmit">Tekşiriş</button><button type="button" class="btn ghost" id="tReset" hidden>Qayta yeçiş</button></div></form></section>';
     h += '<section data-p="review"' + (part === "review" ? "" : " hidden") + '><div class="card"><ol>' + T.review.map(function (q) { return "<li>" + esc(q) + "</li>"; }).join("") + "</ol></div></section>";
     h += '<section data-p="tasks"' + (part === "tasks" ? "" : " hidden") + ">";
     T.tasks.forEach(function (t) {
       h += '<div class="card"><h3>' + esc(t.title.replace(/^\d+-topshiriq\.\s*/, "")) + "</h3><p>" + esc(t.text) + "</p>" + (t.img ? '<figure class="fig"><img src="' + base(s) + "didaktik/" + t.img + '" alt="' + esc(t.title) + '" loading="lazy" data-zoom></figure>' : "") +
-        "<details><summary>Javobni koʻrish</summary><p>" + esc(t.check) + "</p>" + (t.answers ? "<ol>" + t.answers.map(function (a) { return "<li>" + esc(a) + "</li>"; }).join("") + "</ol>" : "") + "</details></div>";
+        "<details><summary>Javobni köriş</summary><p>" + esc(t.check) + "</p>" + (t.answers ? "<ol>" + t.answers.map(function (a) { return "<li>" + esc(a) + "</li>"; }).join("") + "</ol>" : "") + "</details></div>";
     });
-    h += '</section><section data-p="match"' + (part === "match" ? "" : " hidden") + '><p>Har bir soʻzga mos izohni tanlang.</p><div class="card"><div class="match" id="match">';
+    h += '</section><section data-p="match"' + (part === "match" ? "" : " hidden") + '><p>Har bir sözga mos izohni tanlang.</p><div class="card"><div class="match" id="match">';
     var defs = shuffle(T.matching.map(function (m) { return m[1]; }), 77);
     T.matching.forEach(function (m, i) {
       h += '<b id="ml' + i + '">' + esc(m[0]) + '</b><select aria-labelledby="ml' + i + '" data-ok="' + esc(m[1]) + '"><option value="">Tanlang</option>' + defs.map(function (d) { return "<option>" + esc(d) + "</option>"; }).join("") + "</select>";
     });
-    h += '</div><div class="btns"><button class="btn" id="matchCheck">Tekshirish</button></div><div id="matchRes" aria-live="polite"></div></div></section>';
+    h += '</div><div class="btns"><button class="btn" id="matchCheck">Tekşiriş</button></div><div id="matchRes" aria-live="polite"></div></div></section>';
     return h + dl(s, "03_Nazorat_materiallari");
   };
   function bindControl(s, T) {
@@ -261,8 +261,8 @@
         });
         if (ch && ch.value === a) ok++;
       });
-      var p = Math.round(ok / total * 100), g = p >= 86 ? "Aʼlo" : p >= 71 ? "Yaxshi" : p >= 55 ? "Qoniqarli" : "Yana oʻqib chiqing";
-      $("testRes").innerHTML = '<div class="result">' + ok + " / " + total + " toʻgʻri (" + p + "%). " + g + "</div>";
+      var p = Math.round(ok / total * 100), g = p >= 86 ? "Aʼlo" : p >= 71 ? "Yaxşi" : p >= 55 ? "Qoniqarli" : "Yana öqib çiqing";
+      $("testRes").innerHTML = '<div class="result">' + ok + " / " + total + " töğri (" + p + "%). " + g + "</div>";
       $("tSubmit").hidden = true; $("tReset").hidden = false;
       var best = getJ("rtr-best", {}); best[s] = Math.max(p, best[s] || 0); put("rtr-best", JSON.stringify(best));
     }
@@ -272,7 +272,7 @@
       each(f.querySelectorAll(".q"), function (q) { if (!miss && !q.querySelector("input:checked")) miss = q; });
       if (miss && !S.force) {
         each(f.querySelectorAll(".q"), function (q) { q.classList.toggle("miss", !q.querySelector("input:checked")); });
-        $("testRes").innerHTML = '<div class="warn">' + (total - Object.keys(S.ans).length) + " ta savol qoldi. Ularni belgilang yoki yana “Tekshirish”ni bosing.</div>";
+        $("testRes").innerHTML = '<div class="warn">' + (total - Object.keys(S.ans).length) + " ta savol qoldi. Ularni belgilang yoki yana “Tekşiriş”ni bosing.</div>";
         S.force = true; miss.scrollIntoView({ behavior: "smooth", block: "center" }); return;
       }
       S.done = true; S.force = false; grade();
@@ -283,7 +283,7 @@
     $("matchCheck").onclick = function () {
       var ok = 0, sel = document.querySelectorAll("#match select");
       each(sel, function (x) { var g = x.value === x.getAttribute("data-ok"); x.className = x.value ? (g ? "ok" : "no") : "no"; if (g) ok++; });
-      $("matchRes").innerHTML = '<div class="result">' + ok + " / " + sel.length + " toʻgʻri</div>";
+      $("matchRes").innerHTML = '<div class="result">' + ok + " / " + sel.length + " töğri</div>";
     };
   }
   var keySlide = null;
@@ -318,7 +318,7 @@
     var ai = 0, si = 0;
     function draw() {
       var a = T.algorithms[ai], n = a.steps.length;
-      box.innerHTML = '<div class="sbar"><i style="width:' + ((si + 1) / n * 100) + '%"></i></div><div class="crumb">' + (si + 1) + "-qadam, jami " + n + '</div><div class="stext" aria-live="polite">' + esc(a.steps[si]) + '</div><div class="row"><button class="btn ghost" id="stP"' + (si ? "" : " disabled") + ">" + ic("left") + 'Orqaga</button><button class="btn" id="stN">' + (si < n - 1 ? "Keyingi" + ic("right") : "Boshidan") + "</button></div>";
+      box.innerHTML = '<div class="sbar"><i style="width:' + ((si + 1) / n * 100) + '%"></i></div><div class="crumb">' + (si + 1) + "-qadam, jami " + n + '</div><div class="stext" aria-live="polite">' + esc(a.steps[si]) + '</div><div class="row"><button class="btn ghost" id="stP"' + (si ? "" : " disabled") + ">" + ic("left") + 'Orqaga</button><button class="btn" id="stN">' + (si < n - 1 ? "Keyingi" + ic("right") : "Boşidan") + "</button></div>";
       $("stP").onclick = function () { si--; draw(); };
       $("stN").onclick = function () { si = si < n - 1 ? si + 1 : 0; draw(); };
     }
@@ -331,10 +331,10 @@
   }
 
   // ---------- interaktiv mashqlar
-  var SCENE = '<svg viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="640" height="190" fill="#bfe3f7"/><circle cx="540" cy="58" r="30" fill="#ffd54f"/><rect y="190" width="640" height="110" fill="#8bc34a"/><path d="M270 300 L310 190 L340 190 L420 300 Z" fill="#90a4ae"/><rect x="60" y="90" width="130" height="100" fill="#ef9a9a"/><path d="M50 92 L125 40 L200 92 Z" fill="#c62828"/><rect x="105" y="130" width="40" height="60" fill="#6d4c41"/><rect x="440" y="110" width="120" height="80" fill="#fff59d"/><path d="M430 112 L500 66 L570 112 Z" fill="#6a1b9a"/><circle cx="240" cy="170" r="26" fill="#2e7d32"/><rect x="235" y="175" width="10" height="26" fill="#5d4037"/><rect x="330" y="96" width="74" height="40" rx="5" fill="#1565c0"/><text x="367" y="123" font-size="24" fill="#fff" text-anchor="middle" font-family="Arial" font-weight="700">KOʻZ</text></svg>';
+  var SCENE = '<svg viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="640" height="190" fill="#bfe3f7"/><circle cx="540" cy="58" r="30" fill="#ffd54f"/><rect y="190" width="640" height="110" fill="#8bc34a"/><path d="M270 300 L310 190 L340 190 L420 300 Z" fill="#90a4ae"/><rect x="60" y="90" width="130" height="100" fill="#ef9a9a"/><path d="M50 92 L125 40 L200 92 Z" fill="#c62828"/><rect x="105" y="130" width="40" height="60" fill="#6d4c41"/><rect x="440" y="110" width="120" height="80" fill="#fff59d"/><path d="M430 112 L500 66 L570 112 Z" fill="#6a1b9a"/><circle cx="240" cy="170" r="26" fill="#2e7d32"/><rect x="235" y="175" width="10" height="26" fill="#5d4037"/><rect x="330" y="96" width="74" height="40" rx="5" fill="#1565c0"/><text x="367" y="123" font-size="24" fill="#fff" text-anchor="middle" font-family="Arial" font-weight="700">KÖZ</text></svg>';
   var W = {};
   W.ray = { html: function () {
-    return '<div class="card"><h2>' + ic("eye") + 'Koʻz qanday koʻradi</h2><div class="anim-wrap"><svg viewBox="0 0 960 340" id="raySvg" xmlns="http://www.w3.org/2000/svg" font-family="Calibri,Arial"><line x1="80" y1="260" x2="80" y2="100" stroke="#1f618d" stroke-width="8"/><path d="M64 104 L80 76 L96 104 z" fill="#e67e22"/><text x="80" y="290" text-anchor="middle" font-size="18">Narsa</text><circle cx="610" cy="175" r="148" fill="#eaf6ff" stroke="#9aa5b1" stroke-width="10"/><path d="M480 100 A120 120 0 0 0 480 250" fill="none" stroke="#5dade2" stroke-width="7"/><ellipse cx="520" cy="175" rx="20" ry="55" fill="#fff3c4" stroke="#c9a227" stroke-width="3"/><path d="M745 95 A150 150 0 0 1 745 255" fill="none" stroke="#e67e22" stroke-width="7"/><g fill="none" stroke="#f39c12" stroke-width="3"><path class="ray" d="M80 95 L466 130 L520 140 L755 250"/><path class="ray" d="M80 95 L470 175 L520 180 L755 250"/><path class="ray" d="M80 255 L466 220 L520 210 L755 100"/><path class="ray" d="M80 255 L470 175 L520 170 L755 100"/></g><g class="img" opacity="0"><line x1="752" y1="105" x2="752" y2="235" stroke="#1f618d" stroke-width="6"/><path d="M744 240 L752 256 L760 240 z" fill="#1f618d"/></g><text x="440" y="300" font-size="16" text-anchor="middle">shox parda</text><text x="540" y="100" font-size="16">gavhar</text><text x="955" y="40" font-size="16" text-anchor="end">toʻr parda</text></svg></div><div class="btns"><button class="btn ghost" id="rayPlay">' + ic("play") + 'Qayta koʻrish</button></div></div>';
+    return '<div class="card"><h2>' + ic("eye") + 'Köz qanday köradi</h2><div class="anim-wrap"><svg viewBox="0 0 960 340" id="raySvg" xmlns="http://www.w3.org/2000/svg" font-family="Calibri,Arial"><line x1="80" y1="260" x2="80" y2="100" stroke="#1f618d" stroke-width="8"/><path d="M64 104 L80 76 L96 104 z" fill="#e67e22"/><text x="80" y="290" text-anchor="middle" font-size="18">Narsa</text><circle cx="610" cy="175" r="148" fill="#eaf6ff" stroke="#9aa5b1" stroke-width="10"/><path d="M480 100 A120 120 0 0 0 480 250" fill="none" stroke="#5dade2" stroke-width="7"/><ellipse cx="520" cy="175" rx="20" ry="55" fill="#fff3c4" stroke="#c9a227" stroke-width="3"/><path d="M745 95 A150 150 0 0 1 745 255" fill="none" stroke="#e67e22" stroke-width="7"/><g fill="none" stroke="#f39c12" stroke-width="3"><path class="ray" d="M80 95 L466 130 L520 140 L755 250"/><path class="ray" d="M80 95 L470 175 L520 180 L755 250"/><path class="ray" d="M80 255 L466 220 L520 210 L755 100"/><path class="ray" d="M80 255 L470 175 L520 170 L755 100"/></g><g class="img" opacity="0"><line x1="752" y1="105" x2="752" y2="235" stroke="#1f618d" stroke-width="6"/><path d="M744 240 L752 256 L760 240 z" fill="#1f618d"/></g><text x="440" y="300" font-size="16" text-anchor="middle">şox parda</text><text x="540" y="100" font-size="16">gavhar</text><text x="955" y="40" font-size="16" text-anchor="end">tör parda</text></svg></div><div class="btns"><button class="btn ghost" id="rayPlay">' + ic("play") + 'Qayta köriş</button></div></div>';
   }, bind: function () {
     function play() {
       var svg = $("raySvg"); if (!svg) return;
@@ -349,24 +349,24 @@
   } };
   W.pupil = { html: function () {
     var lines = ""; for (var i = 0; i < 24; i++) { var a = i * Math.PI / 12; lines += '<line x1="' + (300 + 40 * Math.cos(a)) + '" y1="' + (130 + 40 * Math.sin(a)) + '" x2="' + (300 + 85 * Math.cos(a)) + '" y2="' + (130 + 85 * Math.sin(a)) + '"/>'; }
-    return '<div class="card"><h2>' + ic("eye") + 'Qorachiq yorugʻlikka javobi</h2><p>Tugmachani suring.</p><div class="anim-wrap"><svg viewBox="0 0 600 260" xmlns="http://www.w3.org/2000/svg"><rect id="pbg" width="600" height="260" fill="#888"/><path d="M60 130 Q300 -10 540 130 Q300 270 60 130 z" fill="#fff" stroke="#555" stroke-width="3"/><circle cx="300" cy="130" r="88" fill="#3d7ea6" stroke="#1f4e6b" stroke-width="4"/><g stroke="#2e6a8e" stroke-width="2" opacity=".6">' + lines + '</g><circle id="pupil" cx="300" cy="130" r="30" fill="#0b0b0b"/><circle cx="318" cy="112" r="8" fill="#fff" opacity=".85"/></svg></div><div class="range">' + ic("moon") + '<input type="range" id="lux" min="0" max="100" value="50" aria-label="Yoritilganlik">' + ic("sun") + '</div><p><b id="pupilTxt"></b></p></div>';
+    return '<div class="card"><h2>' + ic("eye") + 'Qoraçiq yoruğlikka javobi</h2><p>Tugmaçani suring.</p><div class="anim-wrap"><svg viewBox="0 0 600 260" xmlns="http://www.w3.org/2000/svg"><rect id="pbg" width="600" height="260" fill="#888"/><path d="M60 130 Q300 -10 540 130 Q300 270 60 130 z" fill="#fff" stroke="#555" stroke-width="3"/><circle cx="300" cy="130" r="88" fill="#3d7ea6" stroke="#1f4e6b" stroke-width="4"/><g stroke="#2e6a8e" stroke-width="2" opacity=".6">' + lines + '</g><circle id="pupil" cx="300" cy="130" r="30" fill="#0b0b0b"/><circle cx="318" cy="112" r="8" fill="#fff" opacity=".85"/></svg></div><div class="range">' + ic("moon") + '<input type="range" id="lux" min="0" max="100" value="50" aria-label="Yoritilganlik">' + ic("sun") + '</div><p><b id="pupilTxt"></b></p></div>';
   }, bind: function () {
     var lux = $("lux"), f = function () {
       var v = +lux.value, mm = (8 - v * .06).toFixed(1).replace(".", ",");
       $("pupil").setAttribute("r", 52 - v * .42); var g = Math.round(40 + v * 2.1); $("pbg").setAttribute("fill", "rgb(" + g + "," + g + "," + Math.round(g * .95) + ")");
-      $("pupilTxt").textContent = "Qorachiq: " + mm + " mm" + (v > 70 ? " (torayadi)" : v < 30 ? " (kengayadi)" : "");
+      $("pupilTxt").textContent = "Qoraçiq: " + mm + " mm" + (v > 70 ? " (torayadi)" : v < 30 ? " (kengayadi)" : "");
     }; lux.oninput = f; f();
   } };
   W.blind = { html: function () {
-    return '<div class="card"><h2>' + ic("eye") + '“Koʻr dogʻ”ni toping</h2><ol><li>Chap koʻzni kaft bilan yoping.</li><li>Oʻng koʻz bilan <b>+</b> belgisiga qarang.</li><li>Ekranga sekin yaqinlashing: qizil doira yoʻqolib qoladi.</li></ol><div class="blind"><span>+</span><span class="dot"></span></div></div>';
+    return '<div class="card"><h2>' + ic("eye") + '“Kör doğ”ni toping</h2><ol><li>Çap közni kaft bilan yoping.</li><li>Öng köz bilan <b>+</b> belgisiga qarang.</li><li>Ekranga sekin yaqinlaşing: qizil doira yöqolib qoladi.</li></ol><div class="blind"><span>+</span><span class="dot"></span></div></div>';
   }, bind: function () {} };
   W.refraction = { html: function () {
-    return '<div class="card"><h2>' + ic("eye") + 'Yaqindan va uzoqdan koʻrish</h2><div class="chip-row" id="refTabs"><button class="chip on" data-k="e">Sogʻlom koʻz</button><button class="chip" data-k="m">Miopiya</button><button class="chip" data-k="h">Gipermetropiya</button></div><div class="anim-wrap"><svg viewBox="0 0 640 260" id="refSvg" xmlns="http://www.w3.org/2000/svg" font-family="Calibri,Arial"></svg></div><label class="check"><input type="checkbox" id="refLens"> Koʻzoynak taqish</label><p id="refTxt"></p></div>';
+    return '<div class="card"><h2>' + ic("eye") + 'Yaqindan va uzoqdan köriş</h2><div class="chip-row" id="refTabs"><button class="chip on" data-k="e">Soğlom köz</button><button class="chip" data-k="m">Miopiya</button><button class="chip" data-k="h">Gipermetropiya</button></div><div class="anim-wrap"><svg viewBox="0 0 640 260" id="refSvg" xmlns="http://www.w3.org/2000/svg" font-family="Calibri,Arial"></svg></div><label class="check"><input type="checkbox" id="refLens"> Közoynak taqiş</label><p id="refTxt"></p></div>';
   }, bind: function () {
     var k = "e", lens = $("refLens"), info = {
-      e: ["Nurlar toʻr pardaga tushadi: koʻz aniq koʻradi."],
-      m: ["Nurlar toʻr pardadan oldin yigʻiladi: uzoqni xira koʻradi. Botiq (–) linza kerak."],
-      h: ["Nurlar toʻr pardadan keyin yigʻiladi: yaqinni xira koʻradi. Qavariq (+) linza kerak."] };
+      e: ["Nurlar tör pardaga tuşadi: köz aniq köradi."],
+      m: ["Nurlar tör pardadan oldin yiğiladi: uzoqni xira köradi. Botiq (–) linza kerak."],
+      h: ["Nurlar tör pardadan keyin yiğiladi: yaqinni xira köradi. Qavariq (+) linza kerak."] };
     function draw() {
       var ey = 130, r = k === "m" ? 112 : k === "h" ? 92 : 100, ex = 300, ret = ex + r, cor = ex - 100, fx = k === "e" || lens.checked ? ret : k === "m" ? ret - 46 : ret + 46, s = "";
       s += '<ellipse cx="' + (ex + (r - 100) / 2) + '" cy="' + ey + '" rx="' + (r + (100 - r) / 2) + '" ry="96" fill="#eaf6ff" stroke="#9aa5b1" stroke-width="7"/>';
@@ -382,7 +382,7 @@
       });
       s += '<circle cx="' + fx + '" cy="' + ey + '" r="6" fill="#c0392b"/>';
       $("refSvg").innerHTML = s;
-      $("refTxt").textContent = lens.checked && k !== "e" ? "Koʻzoynak bilan nurlar toʻr pardaga tushdi: koʻz aniq koʻradi." : info[k][0];
+      $("refTxt").textContent = lens.checked && k !== "e" ? "Közoynak bilan nurlar tör pardaga tuşdi: köz aniq köradi." : info[k][0];
       lens.disabled = k === "e";
     }
     $("refTabs").onclick = function (e) {
@@ -392,29 +392,29 @@
     lens.onchange = draw; draw();
   } };
   W.snellen = { html: function () {
-    return '<div class="card"><h2>' + ic("calc") + 'Koʻrish oʻtkirligini hisoblash</h2><p>Bemor jadvalning birinchi qatorini necha metrdan oʻqidi?</p><div class="range"><input class="num-in" id="snD" type="number" inputmode="decimal" min="0.1" max="50" step="0.1" value="2" aria-label="Masofa, metr"><span>metr</span></div><p class="note" id="snR"></p></div>';
+    return '<div class="card"><h2>' + ic("calc") + 'Köriş ötkirligini hisoblaş</h2><p>Bemor jadvalning birinçi qatorini neça metrdan öqidi?</p><div class="range"><input class="num-in" id="snD" type="number" inputmode="decimal" min="0.1" max="50" step="0.1" value="2" aria-label="Masofa, metr"><span>metr</span></div><p class="note" id="snR"></p></div>';
   }, bind: function () {
     var i = $("snD"), f = function () {
       var d = parseFloat(String(i.value).replace(",", "."));
-      $("snR").textContent = d > 0 ? "Koʻrish oʻtkirligi: " + d + " / 50 = " + (Math.round(d / 50 * 1000) / 1000).toString().replace(".", ",") : "Masofani kiriting.";
+      $("snR").textContent = d > 0 ? "Köriş ötkirligi: " + d + " / 50 = " + (Math.round(d / 50 * 1000) / 1000).toString().replace(".", ",") : "Masofani kiriting.";
     }; i.oninput = f; f();
   } };
   W.cataract = { html: function () {
-    return '<div class="card"><h2>' + ic("eye") + 'Katarakta bilan qanday koʻrinadi</h2><div class="chip-row" id="catTabs"><button class="chip on" data-i="0">Sogʻlom</button><button class="chip" data-i="1">Boshlanishi</button><button class="chip" data-i="2">Oʻrta</button><button class="chip" data-i="3">Ogʻir</button></div><div class="sim-scene" id="catScene">' + SCENE + '<div class="sim-veil" id="catVeil"></div></div><p id="catTxt"></p></div>';
+    return '<div class="card"><h2>' + ic("eye") + 'Katarakta bilan qanday körinadi</h2><div class="chip-row" id="catTabs"><button class="chip on" data-i="0">Soğlom</button><button class="chip" data-i="1">Boşlanişi</button><button class="chip" data-i="2">Örta</button><button class="chip" data-i="3">Oğir</button></div><div class="sim-scene" id="catScene">' + SCENE + '<div class="sim-veil" id="catVeil"></div></div><p id="catTxt"></p></div>';
   }, bind: function () {
-    var st = [["none", "transparent", "Gavhar tiniq: hammasi aniq koʻrinadi."], ["blur(1.5px) sepia(.25)", "rgba(255,255,255,.12)", "Koʻrish ozgina xiralashadi."],
-      ["blur(6px) sepia(.55)", "rgba(245,240,225,.45)", "Koʻrish keskin pasayadi, ranglar xiralashadi."], ["blur(20px) sepia(.7)", "rgba(240,238,230,.9)", "Faqat yorugʻlik seziladi. Operatsiya kerak."]];
+    var st = [["none", "transparent", "Gavhar tiniq: hammasi aniq körinadi."], ["blur(1.5px) sepia(.25)", "rgba(255,255,255,.12)", "Köriş ozgina xiralaşadi."],
+      ["blur(6px) sepia(.55)", "rgba(245,240,225,.45)", "Köriş keskin pasayadi, ranglar xiralaşadi."], ["blur(20px) sepia(.7)", "rgba(240,238,230,.9)", "Faqat yoruğlik seziladi. Operatsiya kerak."]];
     function set(i) { $("catScene").querySelector("svg").style.filter = st[i][0]; $("catVeil").style.background = st[i][1]; $("catTxt").textContent = st[i][2]; }
     $("catTabs").onclick = function (e) { var b = e.target.closest("button"); if (!b) return; set(+b.getAttribute("data-i")); each(this.querySelectorAll("button"), function (x) { x.classList.toggle("on", x === b); }); };
     set(0);
   } };
   W.field = { html: function () {
-    return '<div class="card"><h2>' + ic("eye") + 'Glaukomada koʻrish qanday torayadi</h2><p>Tugmachani suring.</p><div class="sim-scene">' + SCENE + '<div class="sim-veil" id="fldVeil"></div></div><div class="range"><input type="range" id="fld" min="0" max="100" value="0" aria-label="Kasallik bosqichi"></div><p id="fldTxt"></p></div>';
+    return '<div class="card"><h2>' + ic("eye") + 'Glaukomada köriş qanday torayadi</h2><p>Tugmaçani suring.</p><div class="sim-scene">' + SCENE + '<div class="sim-veil" id="fldVeil"></div></div><div class="range"><input type="range" id="fld" min="0" max="100" value="0" aria-label="Kasallik bosqiçi"></div><p id="fldTxt"></p></div>';
   }, bind: function () {
     var r = $("fld"), f = function () {
       var v = +r.value, sz = 100 - v * .82;
       $("fldVeil").style.background = v ? "radial-gradient(circle at 50% 50%, transparent " + (sz * .55) + "%, #0a0a0a " + sz + "%)" : "transparent";
-      $("fldTxt").textContent = v < 25 ? "Boshida odam deyarli sezmaydi." : v < 60 ? "Koʻrish chetlardan torayadi." : v < 90 ? "Xuddi naychadan qaragandek." : "Koʻrish yoʻqolishiga yaqin. U qaytmaydi.";
+      $("fldTxt").textContent = v < 25 ? "Boşida odam deyarli sezmaydi." : v < 60 ? "Köriş çetlardan torayadi." : v < 90 ? "Xuddi nayçadan qaragandek." : "Köriş yöqolişiga yaqin. U qaytmaydi.";
     }; r.oninput = f; f();
   } };
 
@@ -436,7 +436,7 @@
       app.innerHTML = cache[s] ? "" : '<div class="loading">Yuklanmoqda…</div>';
       loadTopic(s, function (T) {
         if (((location.hash || "").slice(1)) !== r) return;
-        if (!T) { app.innerHTML = '<div class="warn">Mavzuni ochib boʻlmadi. Sahifani yangilang.</div>'; return; }
+        if (!T) { app.innerHTML = '<div class="warn">Mavzuni oçib bölmadi. Sahifani yangilang.</div>'; return; }
         app.innerHTML = head(s, T, tab) + V[tab](s, T) + pager(s, tab);
         put("rtr-last", s + "/" + tab);
         var at = app.querySelector("#tabs a.active"), tw = $("tabs");
