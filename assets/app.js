@@ -2,27 +2,27 @@
   "use strict";
   var D = window.RTR, M = D.module, cache = window.RTR_T = window.RTR_T || {};
   var app = document.getElementById("app"), sb = document.getElementById("sidebar"), bd = document.getElementById("backdrop");
-  var TABS = [["about", "Reja", "list"], ["lecture", "Ma’ruza", "book"], ["methods", "Metodlar", "people"], ["media", "Video", "play"],
-              ["didactic", "Rasmlar", "image"], ["slides", "Slaydlar", "slides"], ["control", "Test", "check"], ["glossary", "Lug‘at", "abc"]];
+  var TABS = [["about", "Reja", "list"], ["lecture", "Maʼruza", "book"], ["methods", "Metodlar", "people"], ["media", "Video", "play"],
+              ["didactic", "Rasmlar", "image"], ["slides", "Slaydlar", "slides"], ["control", "Test", "check"], ["glossary", "Lugʻat", "abc"]];
 
   function esc(s) { return String(s == null ? "" : s).replace(/[&<>"]/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]; }); }
   function $(id) { return document.getElementById(id); }
   function each(list, fn) { Array.prototype.forEach.call(list, fn); }
   function ic(n) { return '<svg class="ic" aria-hidden="true"><use href="#i-' + n + '"/></svg>'; }
   function get(k) { try { return localStorage.getItem(k); } catch (e) { return null; } }
-  function put(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* xotira yopiq bo‘lsa ham ishlaydi */ } }
+  function put(k, v) { try { localStorage.setItem(k, v); } catch (e) { /* xotira yopiq boʻlsa ham ishlaydi */ } }
   function getJ(k, d) { try { return JSON.parse(get(k)) || d; } catch (e) { return d; } }
   function base(s) { return "mavzular/" + s + "/"; }
   function topicIx(s) { for (var i = 0; i < D.topics.length; i++) if (D.topics[i].slug === s) return i; return -1; }
   function topic(s) { var i = topicIx(s); return i < 0 ? null : D.topics[i]; }
 
-  // ---------- matn o‘lchami va rejim
+  // ---------- matn oʻlchami va rejim
   var SIZES = [100, 115, 130], fsIx = Math.max(0, SIZES.indexOf(parseInt(get("rtr-fs2"), 10)));
   function applyFs() { document.documentElement.style.setProperty("--fs", (17 * SIZES[fsIx] / 100) + "px"); put("rtr-fs2", SIZES[fsIx]); }
   function applyTheme(t) {
     document.documentElement.setAttribute("data-theme", t); put("rtr-theme", t);
     $("themeUse").setAttribute("href", t === "dark" ? "#i-sun" : "#i-moon");
-    $("themeBtn").setAttribute("aria-label", t === "dark" ? "Yorug‘ rejim" : "Tungi rejim");
+    $("themeBtn").setAttribute("aria-label", t === "dark" ? "Yorugʻ rejim" : "Tungi rejim");
   }
   applyFs();
   applyTheme(get("rtr-theme") || (window.matchMedia && matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"));
@@ -71,7 +71,7 @@
     if (im) zoom(im.getAttribute("src"), im.getAttribute("alt"));
   });
 
-  // ---------- sahifa boshiga va o‘qish chizig‘i
+  // ---------- sahifa boshiga va oʻqish chizigʻi
   var toTop = $("toTop"), bar = $("readBar");
   toTop.onclick = function () { window.scrollTo({ top: 0, behavior: "smooth" }); };
   function onScroll() {
@@ -88,11 +88,11 @@
     D.topics.forEach(function (t, i) {
       h += '<a href="#t/' + t.slug + '/about"' + cur(t.slug === slug) + ' title="' + esc(t.title) + '"><span class="num">' + (i + 1) + '</span><span class="tt">' + esc(t.short) + "</span></a>";
     });
-    h += '<div class="nav-group">Qo‘shimcha</div><a href="#glossary"' + cur(r === "glossary") + ">" + ic("abc") + '<span class="tt">Lug‘at</span></a><a href="#literature"' + cur(r === "literature") + ">" + ic("shelf") + '<span class="tt">Adabiyotlar</span></a><a href="#author"' + cur(r === "author") + ">" + ic("user") + '<span class="tt">Muallif haqida</span></a>';
+    h += '<div class="nav-group">Qoʻshimcha</div><a href="#glossary"' + cur(r === "glossary") + ">" + ic("abc") + '<span class="tt">Lugʻat</span></a><a href="#literature"' + cur(r === "literature") + ">" + ic("shelf") + '<span class="tt">Adabiyotlar</span></a><a href="#author"' + cur(r === "author") + ">" + ic("user") + '<span class="tt">Muallif haqida</span></a>';
     sb.innerHTML = h;
   }
 
-  // ---------- umumiy bo‘laklar
+  // ---------- umumiy boʻlaklar
   function foot() { return '<div class="foot">' + esc(M.author) + " • " + esc(M.org) + "</div>"; }
   function head(s, T, tab) {
     return '<div class="crumb">' + (topicIx(s) + 1) + "-mavzu • " + esc(T.type) + " • " + T.hours + ' soat</div><h1' + (tab === "about" ? "" : ' class="clamp"') + ' title="' + esc(T.title) + '">' + esc(T.title) + '</h1><div class="tabs-wrap"><div class="tabs" id="tabs">' +
@@ -111,10 +111,12 @@
     return '<div class="dl-row"><span>Yuklab olish:</span><a href="' + p + '.docx" download>' + ic("file") + 'Word</a><a href="' + p + '.pdf" target="_blank" rel="noopener">' + ic("file") + "PDF</a></div>";
   }
   function glList(list, q) {
-    q = q.toLowerCase(); var last = "", h = "";
+    // klaviaturadagi ' ` ‘ ’ belgilari ham ʻ / ʼ deb qidiriladi
+    function nq(x) { return x.toLowerCase().replace(/['`´‘’ʻʼ]/g, "ʻ"); }
+    q = nq(q); var last = "", h = "";
     list.forEach(function (g) {
-      if (q && (g.t + " " + g.l + " " + g.d).toLowerCase().indexOf(q) < 0) return;
-      var m = /^(O‘|G‘|Sh|Ch)/.exec(g.t), L = m ? m[1] : g.t.charAt(0);
+      if (q && nq(g.t + " " + g.l + " " + g.d).indexOf(q) < 0) return;
+      var m = /^(Oʻ|Gʻ|Sh|Ch)/.exec(g.t), L = m ? m[1] : g.t.charAt(0);
       if (L !== last && !q) { h += '<div class="letter">' + esc(L) + "</div>"; last = L; }
       h += '<div class="gl-item"><b>' + esc(g.t) + "</b><br>" + esc(g.d) + "</div>";
     });
@@ -122,7 +124,7 @@
   }
   function glBlock(list) {
     setTimeout(function () { var q = $("glq"); if (q) q.oninput = function () { $("gll").innerHTML = glList(list, q.value); }; }, 0);
-    return '<input class="search" id="glq" type="search" autocomplete="off" aria-label="So‘z qidirish" placeholder="So‘z qidirish"><div id="gll">' + glList(list, "") + "</div>";
+    return '<input class="search" id="glq" type="search" autocomplete="off" aria-label="Soʻz qidirish" placeholder="Soʻz qidirish"><div id="gll">' + glList(list, "") + "</div>";
   }
   function topicRows() {
     var best = getJ("rtr-best", {});
@@ -136,28 +138,28 @@
   var P = {};
   P.home = function () {
     var last = get("rtr-last"), lt = last && topic(last.split("/")[0]);
-    var h = '<div class="hero"><div class="hero-txt"><h1>' + esc(M.title) + "</h1><p>Ko‘z kasalliklarida bemorni parvarish qilishni o‘rganish uchun raqamli darslik</p>" +
+    var h = '<div class="hero"><div class="hero-txt"><h1>' + esc(M.title) + "</h1><p>Koʻz kasalliklarida bemorni parvarish qilishni oʻrganish uchun raqamli darslik</p>" +
       '<div class="btns">' + (lt ? '<a class="btn light" href="#t/' + last + '">Davom ettirish' + ic("right") + "</a>" : '<a class="btn light" href="#t/' + D.topics[0].slug + '/about">Boshlash' + ic("right") + "</a>") + "</div></div>" +
-      '<img src="' + esc(D.hero) + '" alt="Ko‘z tuzilishi"></div>';
-    h += '<div class="how"><div>' + ic("list") + "<b>Mavzuni tanlang</b></div><div>" + ic("play") + "<b>O‘qing va ko‘ring</b></div><div>" + ic("check") + "<b>Testni yeching</b></div></div>";
+      '<img src="' + esc(D.hero) + '" alt="Koʻz tuzilishi"></div>';
+    h += '<div class="how"><div>' + ic("list") + "<b>Mavzuni tanlang</b></div><div>" + ic("play") + "<b>Oʻqing va koʻring</b></div><div>" + ic("check") + "<b>Testni yeching</b></div></div>";
     return h + '<h2 id="topics">Mavzular</h2>' + topicRows() + foot();
   };
   P.topics = P.home;
-  P.glossary = function () { return "<h1>Lug‘at</h1><div class=\"card\">" + glBlock(D.glossary) + "</div>" + foot(); };
+  P.glossary = function () { return "<h1>Lugʻat</h1><div class=\"card\">" + glBlock(D.glossary) + "</div>" + foot(); };
   P.literature = function () { return '<h1>Adabiyotlar</h1><div class="card"><ol>' + D.literature.map(function (l) { return "<li>" + esc(l) + "</li>"; }).join("") + "</ol></div>" + foot(); };
   P.author = function () {
-    return '<h1>Muallif haqida</h1><div class="card"><div class="kv"><div>Muallif</div><div><b>' + esc(M.author) + "</b>, " + esc(M.author_role) + "</div><div>Ta’lim muassasasi</div><div>" + esc(M.org) +
+    return '<h1>Muallif haqida</h1><div class="card"><div class="kv"><div>Muallif</div><div><b>' + esc(M.author) + "</b>, " + esc(M.author_role) + "</div><div>Taʼlim muassasasi</div><div>" + esc(M.org) +
       "</div><div>Hudud</div><div>" + esc(M.region) + "</div><div>Modul</div><div>" + esc(M.title) + "</div><div>Mutaxassislik</div><div>" + esc(M.spec_code) + " – " + esc(M.spec_name) + "</div><div>Kvalifikatsiya</div><div>" + esc(M.qualification) +
-      "</div><div>Soat</div><div>" + M.hours.jami + " soat: nazariy " + M.hours.nazariy + ", amaliy " + M.hours.amaliy + ", mustaqil ta’lim " + M.hours.mustaqil + "</div></div></div>" + foot();
+      "</div><div>Soat</div><div>" + M.hours.jami + " soat: nazariy " + M.hours.nazariy + ", amaliy " + M.hours.amaliy + ", mustaqil taʼlim " + M.hours.mustaqil + "</div></div></div>" + foot();
   };
 
   // ---------- mavzu sahifalari
   var V = {};
   V.about = function (s, T) {
-    var h = '<div class="card"><h2>Bu darsda nimani o‘rganasiz</h2><ul class="ticks">' + T.outcomes.map(function (o) { return "<li>" + ic("check") + "<span>" + esc(o) + "</span></li>"; }).join("") + "</ul></div>";
+    var h = '<div class="card"><h2>Bu darsda nimani oʻrganasiz</h2><ul class="ticks">' + T.outcomes.map(function (o) { return "<li>" + ic("check") + "<span>" + esc(o) + "</span></li>"; }).join("") + "</ul></div>";
     h += '<div class="card"><h2>Reja</h2><ol>' + T.plan.map(function (p, i) { return '<li><a href="#t/' + s + '/lecture" data-sec="lec-' + (i + 1) + '">' + esc(p) + "</a></li>"; }).join("") + "</ol></div>";
-    h += "<details><summary>O‘qituvchi uchun: dars tuzilishi</summary><p>" + esc(T.goal) + '</p><div class="tbl"><table><thead><tr><th>Bosqich</th><th>Vaqt</th><th>Usul</th></tr></thead><tbody>' +
-      T.structure.map(function (r) { return "<tr><td>" + esc(r[0]) + "</td><td>" + esc(r[1]) + "</td><td>" + esc(r[2]) + "</td></tr>"; }).join("") + "</tbody></table></div><p><b>Tayanch so‘zlar:</b> " + T.keywords.map(esc).join(", ") + "</p></details>";
+    h += "<details><summary>Oʻqituvchi uchun: dars tuzilishi</summary><p>" + esc(T.goal) + '</p><div class="tbl"><table><thead><tr><th>Bosqich</th><th>Vaqt</th><th>Usul</th></tr></thead><tbody>' +
+      T.structure.map(function (r) { return "<tr><td>" + esc(r[0]) + "</td><td>" + esc(r[1]) + "</td><td>" + esc(r[2]) + "</td></tr>"; }).join("") + "</tbody></table></div><p><b>Tayanch soʻzlar:</b> " + T.keywords.map(esc).join(", ") + "</p></details>";
     return h;
   };
   V.lecture = function (s, T) {
@@ -168,7 +170,7 @@
   V.methods = function (s, T) {
     var h = "<p>Darsda ishlatiladigan usullar. Birini bosing, u ochiladi.</p>";
     T.methods.forEach(function (m, i) {
-      h += "<details" + (i ? "" : " open") + "><summary>" + esc(m.name) + '</summary><p class="crumb">' + esc(m.stage) + "</p><p>" + esc(m.goal) + "</p><p><b>Qanday o‘tkaziladi</b></p><ol>" +
+      h += "<details" + (i ? "" : " open") + "><summary>" + esc(m.name) + '</summary><p class="crumb">' + esc(m.stage) + "</p><p>" + esc(m.goal) + "</p><p><b>Qanday oʻtkaziladi</b></p><ol>" +
         m.steps.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ol><p><b>Shu mavzuda</b></p><ul>" + m.task.map(function (x) { return "<li>" + esc(x) + "</li>"; }).join("") + "</ul></details>";
     });
     return h + dl(s, "02_Oqitish_metodlari");
@@ -178,7 +180,7 @@
     h += '<div class="card"><h2>' + ic("audio") + 'Tinglash</h2><audio controls preload="none" src="' + base(s) + 'media/audio.mp3"></audio></div>';
     (T.interactive || []).forEach(function (k) { if (W[k]) h += W[k].html(s, T); });
     if (T.algorithms && T.algorithms.length) {
-      h += '<div class="card"><h2>' + ic("steps") + 'Muolajani qadamma-qadam o‘rganing</h2><div class="chip-row" id="algTabs">' +
+      h += '<div class="card"><h2>' + ic("steps") + 'Muolajani qadamma-qadam oʻrganing</h2><div class="chip-row" id="algTabs">' +
         T.algorithms.map(function (a, i) { return '<button class="chip' + (i ? "" : " on") + '" data-i="' + i + '">' + esc(a.title) + "</button>"; }).join("") + '</div><div class="stepper" id="stepper"></div></div>';
     }
     return h;
@@ -224,9 +226,9 @@
     h += '<section data-p="tasks"' + (part === "tasks" ? "" : " hidden") + ">";
     T.tasks.forEach(function (t) {
       h += '<div class="card"><h3>' + esc(t.title.replace(/^\d+-topshiriq\.\s*/, "")) + "</h3><p>" + esc(t.text) + "</p>" + (t.img ? '<figure class="fig"><img src="' + base(s) + "didaktik/" + t.img + '" alt="' + esc(t.title) + '" loading="lazy" data-zoom></figure>' : "") +
-        "<details><summary>Javobni ko‘rish</summary><p>" + esc(t.check) + "</p>" + (t.answers ? "<ol>" + t.answers.map(function (a) { return "<li>" + esc(a) + "</li>"; }).join("") + "</ol>" : "") + "</details></div>";
+        "<details><summary>Javobni koʻrish</summary><p>" + esc(t.check) + "</p>" + (t.answers ? "<ol>" + t.answers.map(function (a) { return "<li>" + esc(a) + "</li>"; }).join("") + "</ol>" : "") + "</details></div>";
     });
-    h += '</section><section data-p="match"' + (part === "match" ? "" : " hidden") + '><p>Har bir so‘zga mos izohni tanlang.</p><div class="card"><div class="match" id="match">';
+    h += '</section><section data-p="match"' + (part === "match" ? "" : " hidden") + '><p>Har bir soʻzga mos izohni tanlang.</p><div class="card"><div class="match" id="match">';
     var defs = shuffle(T.matching.map(function (m) { return m[1]; }), 77);
     T.matching.forEach(function (m, i) {
       h += '<b id="ml' + i + '">' + esc(m[0]) + '</b><select aria-labelledby="ml' + i + '" data-ok="' + esc(m[1]) + '"><option value="">Tanlang</option>' + defs.map(function (d) { return "<option>" + esc(d) + "</option>"; }).join("") + "</select>";
@@ -259,8 +261,8 @@
         });
         if (ch && ch.value === a) ok++;
       });
-      var p = Math.round(ok / total * 100), g = p >= 86 ? "A’lo" : p >= 71 ? "Yaxshi" : p >= 55 ? "Qoniqarli" : "Yana o‘qib chiqing";
-      $("testRes").innerHTML = '<div class="result">' + ok + " / " + total + " to‘g‘ri (" + p + "%). " + g + "</div>";
+      var p = Math.round(ok / total * 100), g = p >= 86 ? "Aʼlo" : p >= 71 ? "Yaxshi" : p >= 55 ? "Qoniqarli" : "Yana oʻqib chiqing";
+      $("testRes").innerHTML = '<div class="result">' + ok + " / " + total + " toʻgʻri (" + p + "%). " + g + "</div>";
       $("tSubmit").hidden = true; $("tReset").hidden = false;
       var best = getJ("rtr-best", {}); best[s] = Math.max(p, best[s] || 0); put("rtr-best", JSON.stringify(best));
     }
@@ -281,7 +283,7 @@
     $("matchCheck").onclick = function () {
       var ok = 0, sel = document.querySelectorAll("#match select");
       each(sel, function (x) { var g = x.value === x.getAttribute("data-ok"); x.className = x.value ? (g ? "ok" : "no") : "no"; if (g) ok++; });
-      $("matchRes").innerHTML = '<div class="result">' + ok + " / " + sel.length + " to‘g‘ri</div>";
+      $("matchRes").innerHTML = '<div class="result">' + ok + " / " + sel.length + " toʻgʻri</div>";
     };
   }
   var keySlide = null;
@@ -329,10 +331,10 @@
   }
 
   // ---------- interaktiv mashqlar
-  var SCENE = '<svg viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="640" height="190" fill="#bfe3f7"/><circle cx="540" cy="58" r="30" fill="#ffd54f"/><rect y="190" width="640" height="110" fill="#8bc34a"/><path d="M270 300 L310 190 L340 190 L420 300 Z" fill="#90a4ae"/><rect x="60" y="90" width="130" height="100" fill="#ef9a9a"/><path d="M50 92 L125 40 L200 92 Z" fill="#c62828"/><rect x="105" y="130" width="40" height="60" fill="#6d4c41"/><rect x="440" y="110" width="120" height="80" fill="#fff59d"/><path d="M430 112 L500 66 L570 112 Z" fill="#6a1b9a"/><circle cx="240" cy="170" r="26" fill="#2e7d32"/><rect x="235" y="175" width="10" height="26" fill="#5d4037"/><rect x="330" y="96" width="74" height="40" rx="5" fill="#1565c0"/><text x="367" y="123" font-size="24" fill="#fff" text-anchor="middle" font-family="Arial" font-weight="700">KO‘Z</text></svg>';
+  var SCENE = '<svg viewBox="0 0 640 300" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><rect width="640" height="190" fill="#bfe3f7"/><circle cx="540" cy="58" r="30" fill="#ffd54f"/><rect y="190" width="640" height="110" fill="#8bc34a"/><path d="M270 300 L310 190 L340 190 L420 300 Z" fill="#90a4ae"/><rect x="60" y="90" width="130" height="100" fill="#ef9a9a"/><path d="M50 92 L125 40 L200 92 Z" fill="#c62828"/><rect x="105" y="130" width="40" height="60" fill="#6d4c41"/><rect x="440" y="110" width="120" height="80" fill="#fff59d"/><path d="M430 112 L500 66 L570 112 Z" fill="#6a1b9a"/><circle cx="240" cy="170" r="26" fill="#2e7d32"/><rect x="235" y="175" width="10" height="26" fill="#5d4037"/><rect x="330" y="96" width="74" height="40" rx="5" fill="#1565c0"/><text x="367" y="123" font-size="24" fill="#fff" text-anchor="middle" font-family="Arial" font-weight="700">KOʻZ</text></svg>';
   var W = {};
   W.ray = { html: function () {
-    return '<div class="card"><h2>' + ic("eye") + 'Ko‘z qanday ko‘radi</h2><div class="anim-wrap"><svg viewBox="0 0 960 340" id="raySvg" xmlns="http://www.w3.org/2000/svg" font-family="Calibri,Arial"><line x1="80" y1="260" x2="80" y2="100" stroke="#1f618d" stroke-width="8"/><path d="M64 104 L80 76 L96 104 z" fill="#e67e22"/><text x="80" y="290" text-anchor="middle" font-size="18">Narsa</text><circle cx="610" cy="175" r="148" fill="#eaf6ff" stroke="#9aa5b1" stroke-width="10"/><path d="M480 100 A120 120 0 0 0 480 250" fill="none" stroke="#5dade2" stroke-width="7"/><ellipse cx="520" cy="175" rx="20" ry="55" fill="#fff3c4" stroke="#c9a227" stroke-width="3"/><path d="M745 95 A150 150 0 0 1 745 255" fill="none" stroke="#e67e22" stroke-width="7"/><g fill="none" stroke="#f39c12" stroke-width="3"><path class="ray" d="M80 95 L466 130 L520 140 L755 250"/><path class="ray" d="M80 95 L470 175 L520 180 L755 250"/><path class="ray" d="M80 255 L466 220 L520 210 L755 100"/><path class="ray" d="M80 255 L470 175 L520 170 L755 100"/></g><g class="img" opacity="0"><line x1="752" y1="105" x2="752" y2="235" stroke="#1f618d" stroke-width="6"/><path d="M744 240 L752 256 L760 240 z" fill="#1f618d"/></g><text x="440" y="300" font-size="16" text-anchor="middle">shox parda</text><text x="540" y="100" font-size="16">gavhar</text><text x="955" y="40" font-size="16" text-anchor="end">to‘r parda</text></svg></div><div class="btns"><button class="btn ghost" id="rayPlay">' + ic("play") + 'Qayta ko‘rish</button></div></div>';
+    return '<div class="card"><h2>' + ic("eye") + 'Koʻz qanday koʻradi</h2><div class="anim-wrap"><svg viewBox="0 0 960 340" id="raySvg" xmlns="http://www.w3.org/2000/svg" font-family="Calibri,Arial"><line x1="80" y1="260" x2="80" y2="100" stroke="#1f618d" stroke-width="8"/><path d="M64 104 L80 76 L96 104 z" fill="#e67e22"/><text x="80" y="290" text-anchor="middle" font-size="18">Narsa</text><circle cx="610" cy="175" r="148" fill="#eaf6ff" stroke="#9aa5b1" stroke-width="10"/><path d="M480 100 A120 120 0 0 0 480 250" fill="none" stroke="#5dade2" stroke-width="7"/><ellipse cx="520" cy="175" rx="20" ry="55" fill="#fff3c4" stroke="#c9a227" stroke-width="3"/><path d="M745 95 A150 150 0 0 1 745 255" fill="none" stroke="#e67e22" stroke-width="7"/><g fill="none" stroke="#f39c12" stroke-width="3"><path class="ray" d="M80 95 L466 130 L520 140 L755 250"/><path class="ray" d="M80 95 L470 175 L520 180 L755 250"/><path class="ray" d="M80 255 L466 220 L520 210 L755 100"/><path class="ray" d="M80 255 L470 175 L520 170 L755 100"/></g><g class="img" opacity="0"><line x1="752" y1="105" x2="752" y2="235" stroke="#1f618d" stroke-width="6"/><path d="M744 240 L752 256 L760 240 z" fill="#1f618d"/></g><text x="440" y="300" font-size="16" text-anchor="middle">shox parda</text><text x="540" y="100" font-size="16">gavhar</text><text x="955" y="40" font-size="16" text-anchor="end">toʻr parda</text></svg></div><div class="btns"><button class="btn ghost" id="rayPlay">' + ic("play") + 'Qayta koʻrish</button></div></div>';
   }, bind: function () {
     function play() {
       var svg = $("raySvg"); if (!svg) return;
@@ -347,7 +349,7 @@
   } };
   W.pupil = { html: function () {
     var lines = ""; for (var i = 0; i < 24; i++) { var a = i * Math.PI / 12; lines += '<line x1="' + (300 + 40 * Math.cos(a)) + '" y1="' + (130 + 40 * Math.sin(a)) + '" x2="' + (300 + 85 * Math.cos(a)) + '" y2="' + (130 + 85 * Math.sin(a)) + '"/>'; }
-    return '<div class="card"><h2>' + ic("eye") + 'Qorachiq yorug‘likka javobi</h2><p>Tugmachani suring.</p><div class="anim-wrap"><svg viewBox="0 0 600 260" xmlns="http://www.w3.org/2000/svg"><rect id="pbg" width="600" height="260" fill="#888"/><path d="M60 130 Q300 -10 540 130 Q300 270 60 130 z" fill="#fff" stroke="#555" stroke-width="3"/><circle cx="300" cy="130" r="88" fill="#3d7ea6" stroke="#1f4e6b" stroke-width="4"/><g stroke="#2e6a8e" stroke-width="2" opacity=".6">' + lines + '</g><circle id="pupil" cx="300" cy="130" r="30" fill="#0b0b0b"/><circle cx="318" cy="112" r="8" fill="#fff" opacity=".85"/></svg></div><div class="range">' + ic("moon") + '<input type="range" id="lux" min="0" max="100" value="50" aria-label="Yoritilganlik">' + ic("sun") + '</div><p><b id="pupilTxt"></b></p></div>';
+    return '<div class="card"><h2>' + ic("eye") + 'Qorachiq yorugʻlikka javobi</h2><p>Tugmachani suring.</p><div class="anim-wrap"><svg viewBox="0 0 600 260" xmlns="http://www.w3.org/2000/svg"><rect id="pbg" width="600" height="260" fill="#888"/><path d="M60 130 Q300 -10 540 130 Q300 270 60 130 z" fill="#fff" stroke="#555" stroke-width="3"/><circle cx="300" cy="130" r="88" fill="#3d7ea6" stroke="#1f4e6b" stroke-width="4"/><g stroke="#2e6a8e" stroke-width="2" opacity=".6">' + lines + '</g><circle id="pupil" cx="300" cy="130" r="30" fill="#0b0b0b"/><circle cx="318" cy="112" r="8" fill="#fff" opacity=".85"/></svg></div><div class="range">' + ic("moon") + '<input type="range" id="lux" min="0" max="100" value="50" aria-label="Yoritilganlik">' + ic("sun") + '</div><p><b id="pupilTxt"></b></p></div>';
   }, bind: function () {
     var lux = $("lux"), f = function () {
       var v = +lux.value, mm = (8 - v * .06).toFixed(1).replace(".", ",");
@@ -356,15 +358,15 @@
     }; lux.oninput = f; f();
   } };
   W.blind = { html: function () {
-    return '<div class="card"><h2>' + ic("eye") + '“Ko‘r dog‘”ni toping</h2><ol><li>Chap ko‘zni kaft bilan yoping.</li><li>O‘ng ko‘z bilan <b>+</b> belgisiga qarang.</li><li>Ekranga sekin yaqinlashing: qizil doira yo‘qolib qoladi.</li></ol><div class="blind"><span>+</span><span class="dot"></span></div></div>';
+    return '<div class="card"><h2>' + ic("eye") + '“Koʻr dogʻ”ni toping</h2><ol><li>Chap koʻzni kaft bilan yoping.</li><li>Oʻng koʻz bilan <b>+</b> belgisiga qarang.</li><li>Ekranga sekin yaqinlashing: qizil doira yoʻqolib qoladi.</li></ol><div class="blind"><span>+</span><span class="dot"></span></div></div>';
   }, bind: function () {} };
   W.refraction = { html: function () {
-    return '<div class="card"><h2>' + ic("eye") + 'Yaqindan va uzoqdan ko‘rish</h2><div class="chip-row" id="refTabs"><button class="chip on" data-k="e">Sog‘lom ko‘z</button><button class="chip" data-k="m">Miopiya</button><button class="chip" data-k="h">Gipermetropiya</button></div><div class="anim-wrap"><svg viewBox="0 0 640 260" id="refSvg" xmlns="http://www.w3.org/2000/svg" font-family="Calibri,Arial"></svg></div><label class="check"><input type="checkbox" id="refLens"> Ko‘zoynak taqish</label><p id="refTxt"></p></div>';
+    return '<div class="card"><h2>' + ic("eye") + 'Yaqindan va uzoqdan koʻrish</h2><div class="chip-row" id="refTabs"><button class="chip on" data-k="e">Sogʻlom koʻz</button><button class="chip" data-k="m">Miopiya</button><button class="chip" data-k="h">Gipermetropiya</button></div><div class="anim-wrap"><svg viewBox="0 0 640 260" id="refSvg" xmlns="http://www.w3.org/2000/svg" font-family="Calibri,Arial"></svg></div><label class="check"><input type="checkbox" id="refLens"> Koʻzoynak taqish</label><p id="refTxt"></p></div>';
   }, bind: function () {
     var k = "e", lens = $("refLens"), info = {
-      e: ["Nurlar to‘r pardaga tushadi: ko‘z aniq ko‘radi."],
-      m: ["Nurlar to‘r pardadan oldin yig‘iladi: uzoqni xira ko‘radi. Botiq (–) linza kerak."],
-      h: ["Nurlar to‘r pardadan keyin yig‘iladi: yaqinni xira ko‘radi. Qavariq (+) linza kerak."] };
+      e: ["Nurlar toʻr pardaga tushadi: koʻz aniq koʻradi."],
+      m: ["Nurlar toʻr pardadan oldin yigʻiladi: uzoqni xira koʻradi. Botiq (–) linza kerak."],
+      h: ["Nurlar toʻr pardadan keyin yigʻiladi: yaqinni xira koʻradi. Qavariq (+) linza kerak."] };
     function draw() {
       var ey = 130, r = k === "m" ? 112 : k === "h" ? 92 : 100, ex = 300, ret = ex + r, cor = ex - 100, fx = k === "e" || lens.checked ? ret : k === "m" ? ret - 46 : ret + 46, s = "";
       s += '<ellipse cx="' + (ex + (r - 100) / 2) + '" cy="' + ey + '" rx="' + (r + (100 - r) / 2) + '" ry="96" fill="#eaf6ff" stroke="#9aa5b1" stroke-width="7"/>';
@@ -380,7 +382,7 @@
       });
       s += '<circle cx="' + fx + '" cy="' + ey + '" r="6" fill="#c0392b"/>';
       $("refSvg").innerHTML = s;
-      $("refTxt").textContent = lens.checked && k !== "e" ? "Ko‘zoynak bilan nurlar to‘r pardaga tushdi: ko‘z aniq ko‘radi." : info[k][0];
+      $("refTxt").textContent = lens.checked && k !== "e" ? "Koʻzoynak bilan nurlar toʻr pardaga tushdi: koʻz aniq koʻradi." : info[k][0];
       lens.disabled = k === "e";
     }
     $("refTabs").onclick = function (e) {
@@ -390,33 +392,33 @@
     lens.onchange = draw; draw();
   } };
   W.snellen = { html: function () {
-    return '<div class="card"><h2>' + ic("calc") + 'Ko‘rish o‘tkirligini hisoblash</h2><p>Bemor jadvalning birinchi qatorini necha metrdan o‘qidi?</p><div class="range"><input class="num-in" id="snD" type="number" inputmode="decimal" min="0.1" max="50" step="0.1" value="2" aria-label="Masofa, metr"><span>metr</span></div><p class="note" id="snR"></p></div>';
+    return '<div class="card"><h2>' + ic("calc") + 'Koʻrish oʻtkirligini hisoblash</h2><p>Bemor jadvalning birinchi qatorini necha metrdan oʻqidi?</p><div class="range"><input class="num-in" id="snD" type="number" inputmode="decimal" min="0.1" max="50" step="0.1" value="2" aria-label="Masofa, metr"><span>metr</span></div><p class="note" id="snR"></p></div>';
   }, bind: function () {
     var i = $("snD"), f = function () {
       var d = parseFloat(String(i.value).replace(",", "."));
-      $("snR").textContent = d > 0 ? "Ko‘rish o‘tkirligi: " + d + " / 50 = " + (Math.round(d / 50 * 1000) / 1000).toString().replace(".", ",") : "Masofani kiriting.";
+      $("snR").textContent = d > 0 ? "Koʻrish oʻtkirligi: " + d + " / 50 = " + (Math.round(d / 50 * 1000) / 1000).toString().replace(".", ",") : "Masofani kiriting.";
     }; i.oninput = f; f();
   } };
   W.cataract = { html: function () {
-    return '<div class="card"><h2>' + ic("eye") + 'Katarakta bilan qanday ko‘rinadi</h2><div class="chip-row" id="catTabs"><button class="chip on" data-i="0">Sog‘lom</button><button class="chip" data-i="1">Boshlanishi</button><button class="chip" data-i="2">O‘rta</button><button class="chip" data-i="3">Og‘ir</button></div><div class="sim-scene" id="catScene">' + SCENE + '<div class="sim-veil" id="catVeil"></div></div><p id="catTxt"></p></div>';
+    return '<div class="card"><h2>' + ic("eye") + 'Katarakta bilan qanday koʻrinadi</h2><div class="chip-row" id="catTabs"><button class="chip on" data-i="0">Sogʻlom</button><button class="chip" data-i="1">Boshlanishi</button><button class="chip" data-i="2">Oʻrta</button><button class="chip" data-i="3">Ogʻir</button></div><div class="sim-scene" id="catScene">' + SCENE + '<div class="sim-veil" id="catVeil"></div></div><p id="catTxt"></p></div>';
   }, bind: function () {
-    var st = [["none", "transparent", "Gavhar tiniq: hammasi aniq ko‘rinadi."], ["blur(1.5px) sepia(.25)", "rgba(255,255,255,.12)", "Ko‘rish ozgina xiralashadi."],
-      ["blur(6px) sepia(.55)", "rgba(245,240,225,.45)", "Ko‘rish keskin pasayadi, ranglar xiralashadi."], ["blur(20px) sepia(.7)", "rgba(240,238,230,.9)", "Faqat yorug‘lik seziladi. Operatsiya kerak."]];
+    var st = [["none", "transparent", "Gavhar tiniq: hammasi aniq koʻrinadi."], ["blur(1.5px) sepia(.25)", "rgba(255,255,255,.12)", "Koʻrish ozgina xiralashadi."],
+      ["blur(6px) sepia(.55)", "rgba(245,240,225,.45)", "Koʻrish keskin pasayadi, ranglar xiralashadi."], ["blur(20px) sepia(.7)", "rgba(240,238,230,.9)", "Faqat yorugʻlik seziladi. Operatsiya kerak."]];
     function set(i) { $("catScene").querySelector("svg").style.filter = st[i][0]; $("catVeil").style.background = st[i][1]; $("catTxt").textContent = st[i][2]; }
     $("catTabs").onclick = function (e) { var b = e.target.closest("button"); if (!b) return; set(+b.getAttribute("data-i")); each(this.querySelectorAll("button"), function (x) { x.classList.toggle("on", x === b); }); };
     set(0);
   } };
   W.field = { html: function () {
-    return '<div class="card"><h2>' + ic("eye") + 'Glaukomada ko‘rish qanday torayadi</h2><p>Tugmachani suring.</p><div class="sim-scene">' + SCENE + '<div class="sim-veil" id="fldVeil"></div></div><div class="range"><input type="range" id="fld" min="0" max="100" value="0" aria-label="Kasallik bosqichi"></div><p id="fldTxt"></p></div>';
+    return '<div class="card"><h2>' + ic("eye") + 'Glaukomada koʻrish qanday torayadi</h2><p>Tugmachani suring.</p><div class="sim-scene">' + SCENE + '<div class="sim-veil" id="fldVeil"></div></div><div class="range"><input type="range" id="fld" min="0" max="100" value="0" aria-label="Kasallik bosqichi"></div><p id="fldTxt"></p></div>';
   }, bind: function () {
     var r = $("fld"), f = function () {
       var v = +r.value, sz = 100 - v * .82;
       $("fldVeil").style.background = v ? "radial-gradient(circle at 50% 50%, transparent " + (sz * .55) + "%, #0a0a0a " + sz + "%)" : "transparent";
-      $("fldTxt").textContent = v < 25 ? "Boshida odam deyarli sezmaydi." : v < 60 ? "Ko‘rish chetlardan torayadi." : v < 90 ? "Xuddi naychadan qaragandek." : "Ko‘rish yo‘qolishiga yaqin. U qaytmaydi.";
+      $("fldTxt").textContent = v < 25 ? "Boshida odam deyarli sezmaydi." : v < 60 ? "Koʻrish chetlardan torayadi." : v < 90 ? "Xuddi naychadan qaragandek." : "Koʻrish yoʻqolishiga yaqin. U qaytmaydi.";
     }; r.oninput = f; f();
   } };
 
-  // ---------- yo‘naltirish
+  // ---------- yoʻnaltirish
   function loadTopic(s, cb) {
     if (cache[s]) return cb(cache[s]);
     var el = document.createElement("script"); el.src = "assets/topics/" + s + ".js?v=" + D.ver;
@@ -434,7 +436,7 @@
       app.innerHTML = cache[s] ? "" : '<div class="loading">Yuklanmoqda…</div>';
       loadTopic(s, function (T) {
         if (((location.hash || "").slice(1)) !== r) return;
-        if (!T) { app.innerHTML = '<div class="warn">Mavzuni ochib bo‘lmadi. Sahifani yangilang.</div>'; return; }
+        if (!T) { app.innerHTML = '<div class="warn">Mavzuni ochib boʻlmadi. Sahifani yangilang.</div>'; return; }
         app.innerHTML = head(s, T, tab) + V[tab](s, T) + pager(s, tab);
         put("rtr-last", s + "/" + tab);
         var at = app.querySelector("#tabs a.active"), tw = $("tabs");
